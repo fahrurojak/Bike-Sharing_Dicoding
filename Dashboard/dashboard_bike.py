@@ -93,27 +93,54 @@ aggregated_stats_by_season_temp = day_df.groupby('season').agg({
     'hum': ['max', 'min', 'mean']
 })
 
-# CSS styling for minimalistic and user-friendly UI
+# CSS styling for minimalistic and user-friendly UI with animation
 st.markdown(
     """
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    
     .main {
         background-color: #F5F5F5;
         color: #333333;
+        transition: background-color 0.5s ease, color 0.5s ease;
     }
+
     .sidebar .sidebar-content {
         background-color: #FFFFFF;
         color: #333333;
+        transition: background-color 0.5s ease, color 0.5s ease;
     }
-    .css-1d391kg {
-        color: #0077B5;
+
+    .css-1d391kg, .css-2trqyj {
+        color: #0077B5 !important;
     }
-    .css-2trqyj {
-        color: #0077B5;
-    }
+
     .stButton>button {
         color: white;
         background-color: #0077B5;
+        border-radius: 10px;
+        transition: background-color 0.5s ease;
+    }
+
+    .stButton>button:hover {
+        background-color: #005f8b;
+    }
+
+    .stMetric {
+        text-align: center;
+        font-size: 1.5em;
+    }
+
+    .stMetric > div {
+        transition: transform 0.5s ease;
+    }
+
+    .stMetric:hover > div {
+        transform: scale(1.05);
     }
     </style>
     """,
