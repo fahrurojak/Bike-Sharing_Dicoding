@@ -4,11 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-from statsmodels.tsa.seasonal import seasonal_decompose
-from sklearn.ensemble import RandomForestRegressor
 from datetime import datetime
 import streamlit as st
-
 
 
 day_df = pd.read_csv("https://raw.githubusercontent.com/fahrurojak/Bike-Sharing_Dicoding/main/Dataset/day.csv")
@@ -259,45 +256,6 @@ fig = px.bar(seasonal_usage, x='season', y=['registered', 'casual'],
              title='Bike Rental Counts by Season',
              labels={'season': 'Season', 'value': 'Total Rentals', 'variable': 'User Type'},
              color_discrete_sequence=["#00FF00","#0000FF"], barmode='group')
-
-# Time Series Decomposition for bike rentals
-ts_decomposition = seasonal_decompose(day_df.set_index('dateday')['count'], model='multiplicative', period=365)
-
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(15, 10))
-ax1.plot(ts_decomposition.observed)
-ax1.set_title('Observed')
-ax2.plot(ts_decomposition.trend)
-ax2.set_title('Trend')
-ax3.plot(ts_decomposition.seasonal)
-ax3.set_title('Seasonal')
-ax4.plot(ts_decomposition.resid)
-ax4.set_title('Residual')
-st.pyplot(fig)
-
-# Feature Importance Analysis
-features = day_df[['temp', 'atemp', 'hum', 'holiday', 'workingday', 'weathersit', 'season']].copy()
-features['season'] = features['season'].map({'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3})
-features['weathersit'] = features['weathersit'].map({'Clear/Partly Cloudy': 1, 'Misty/Cloudy': 2, 'Light Snow/Rain': 3, 'Severe Weather': 4})
-
-X = features
-y = day_df['count']
-
-model = RandomForestRegressor()
-model.fit(X, y)
-importance = model.feature_importances_
-feature_importance = pd.DataFrame({'Feature': X.columns, 'Importance': importance}).sort_values(by='Importance', ascending=False)
-
-fig = px.bar(feature_importance, x='Importance', y='Feature', orientation='h',
-             title='Feature Importance in Predicting Bike Rentals',
-             labels={'Feature': 'Features', 'Importance': 'Importance'})
-st.plotly_chart(fig, use_container_width=True)
-
-# Correlation Matrix
-corr_matrix = day_df[['temp', 'atemp', 'hum', 'casual', 'registered', 'count']].corr()
-fig, ax = plt.subplots(figsize=(10, 8))
-sns.heatmap(corr_matrix, annot=True, fmt='.2f', cmap='coolwarm', square=True, ax=ax)
-ax.set_title('Correlation Matrix')
-st.pyplot(fig)
 
 # Displaying the plot
 st.plotly_chart(fig, use_container_width=True)
