@@ -1,4 +1,3 @@
-# Libraries Used
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -93,6 +92,33 @@ aggregated_stats_by_season_temp = day_df.groupby('season').agg({
     'atemp': ['max', 'min', 'mean'],
     'hum': ['max', 'min', 'mean']
 })
+
+# CSS styling for minimalistic and user-friendly UI
+st.markdown(
+    """
+    <style>
+    .main {
+        background-color: #F5F5F5;
+        color: #333333;
+    }
+    .sidebar .sidebar-content {
+        background-color: #FFFFFF;
+        color: #333333;
+    }
+    .css-1d391kg {
+        color: #0077B5;
+    }
+    .css-2trqyj {
+        color: #0077B5;
+    }
+    .stButton>button {
+        color: white;
+        background-color: #0077B5;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Sidebar components
 min_date = day_df["dateday"].min()
