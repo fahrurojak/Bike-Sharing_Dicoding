@@ -101,33 +101,32 @@ st.markdown(
     
     * {
         font-family: 'Roboto', sans-serif;
+        transition: all 0.5s ease;
     }
     
     .main {
-        background-color: #F5F5F5;
-        color: #333333;
-        transition: background-color 0.5s ease, color 0.5s ease;
+        background-color: #282c34;
+        color: #ffffff;
     }
 
     .sidebar .sidebar-content {
-        background-color: #FFFFFF;
-        color: #333333;
-        transition: background-color 0.5s ease, color 0.5s ease;
+        background-color: #20232a;
+        color: #61dafb;
     }
 
     .css-1d391kg, .css-2trqyj {
-        color: #0077B5 !important;
+        color: #61dafb !important;
     }
 
     .stButton>button {
         color: white;
-        background-color: #0077B5;
+        background-color: #61dafb;
         border-radius: 10px;
         transition: background-color 0.5s ease;
     }
 
     .stButton>button:hover {
-        background-color: #005f8b;
+        background-color: #21a1f1;
     }
 
     .stMetric {
