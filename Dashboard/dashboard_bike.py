@@ -126,13 +126,13 @@ start_date, end_date = st.sidebar.date_input(
 st.sidebar.header("Connect with me:")
 
 # Menampilkan nama di sidebar
-st.sidebar.markdown("Silvia Dharma")
+st.sidebar.markdown("Fahru Rojak")
 
 
 # Menambahkan tautan LinkedIn di sidebar
 col1 = st.sidebar
 with col1:
-    st.markdown("[![LinkedIn]](https://id.linkedin.com/in/silvia-dharma-1a7265219?trk=public_profile_browsemap)")
+    st.markdown("[![LinkedIn]](https://id.linkedin.com/in/fahrurojak?trk=public_profile_browsemap)")
 
 # Menambahkan teks penjelasan di sidebar
 st.sidebar.markdown("For inquiries and collaborations, feel free to contact me!")
