@@ -98,40 +98,49 @@ st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-    
+
     * {
         font-family: 'Roboto', sans-serif;
         transition: all 0.5s ease;
     }
     
     .main {
-        background-color: #282c34;
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #333333;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px;
     }
 
     .sidebar .sidebar-content {
-        background-color: #20232a;
-        color: #61dafb;
+        background-color: #f8f9fa;
+        color: #333333;
+        border-radius: 15px;
+        padding: 20px;
     }
 
     .css-1d391kg, .css-2trqyj {
-        color: #61dafb !important;
+        color: #0077B5 !important;
     }
 
     .stButton>button {
         color: white;
-        background-color: #61dafb;
-        border-radius: 10px;
+        background-color: #0077B5;
+        border-radius: 15px;
         transition: background-color 0.5s ease;
     }
 
     .stButton>button:hover {
-        background-color: #21a1f1;
+        background-color: #005f8b;
     }
 
     .stMetric {
         text-align: center;
         font-size: 1.5em;
+        border-radius: 15px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        margin: 10px;
     }
 
     .stMetric > div {
