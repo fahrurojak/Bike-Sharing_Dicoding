@@ -105,7 +105,7 @@ st.markdown(
     }
     
     .main {
-        background-color: #ffffff;
+        background-color: #f8f9fa;
         color: #333333;
         border-radius: 15px;
         padding: 20px;
@@ -113,14 +113,14 @@ st.markdown(
     }
 
     .sidebar .sidebar-content {
-        background-color: #f8f9fa;
-        color: #333333;
+        background-color: #0077B5;
+        color: #ffffff;
         border-radius: 15px;
         padding: 20px;
     }
 
     .css-1d391kg, .css-2trqyj {
-        color: #0077B5 !important;
+        color: #ffffff !important;
     }
 
     .stButton>button {
@@ -139,7 +139,7 @@ st.markdown(
         font-size: 1.5em;
         border-radius: 15px;
         padding: 10px;
-        background-color: #f8f9fa;
+        background-color: #ffffff;
         margin: 10px;
     }
 
@@ -149,6 +149,12 @@ st.markdown(
 
     .stMetric:hover > div {
         transform: scale(1.05);
+    }
+
+    .stPlotlyChart {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 20px;
     }
     </style>
     """,
