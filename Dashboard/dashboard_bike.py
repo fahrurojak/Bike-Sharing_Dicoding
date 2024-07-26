@@ -4,12 +4,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-from datetime import datetime
 from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.ensemble import RandomForestRegressor
+from datetime import datetime
 import streamlit as st
 
-# Load dataset
+
+
 day_df = pd.read_csv("https://raw.githubusercontent.com/fahrurojak/Bike-Sharing_Dicoding/main/Dataset/day.csv")
 
 # Removing the windspeed column (not relevant to the business question)
@@ -48,6 +49,7 @@ day_df['weathersit'] = day_df['weathersit'].map({
     4: 'Severe Weather'
 })
 
+
 # Resampling data based on month and calculating total rides
 monthly_rent_df = day_df.resample(rule='M', on='dateday').agg({
     "casual": "sum",
@@ -71,6 +73,7 @@ monthly_rent_df.rename(columns={
 grouped_by_month = day_df.groupby('month')
 aggregated_stats_by_month = grouped_by_month['count'].agg(['max', 'min', 'mean', 'sum'])
 
+
 # Grouping bike renters (casual and registered) data by weather
 grouped_by_weather = day_df.groupby('weathersit')
 aggregated_stats_by_weather = grouped_by_weather['count'].agg(['max', 'min', 'mean', 'sum'])
@@ -87,6 +90,14 @@ aggregated_stats_by_weekday = grouped_by_weekday['count'].agg(['max', 'min', 'me
 grouped_by_workingday = day_df.groupby('workingday')
 aggregated_stats_by_workingday = grouped_by_workingday['count'].agg(['max', 'min', 'mean'])
 
+# Grouping bike rental data by season
+grouped_by_season = day_df.groupby('season')
+aggregated_stats_by_season = grouped_by_season.agg({
+    'casual': 'mean',
+    'registered': 'mean',
+    'count': ['max', 'min', 'mean']
+})
+
 # Grouping data by season and calculating aggregate statistics for temperature variables (temp),
 # perceived temperature (atemp),
 # and humidity (hum)
@@ -96,51 +107,81 @@ aggregated_stats_by_season = day_df.groupby('season').agg({
     'hum': ['max', 'min', 'mean']
 })
 
-# Prepare filter components
+
+# Menyiapkan filter components (komponen filter)
 min_date = day_df["dateday"].min()
 max_date = day_df["dateday"].max()
 
-# Sidebar
+# Menampilkan logo Capital Bikeshare di sidebar
 st.sidebar.image("https://img.fonwall.ru/o/63/velofristayl-trial-velosipedist-zakat.jpg")
+
+# Menampilkan header "Filter" di sidebar
 st.sidebar.header("Filter:")
+# Memilih rentang tanggal dengan date_input di sidebar
 start_date, end_date = st.sidebar.date_input(
     label="Date",
     min_value=min_date,
     max_value=max_date,
     value=[min_date, max_date]
 )
+
+# Menampilkan header "Connect with me" di sidebar
 st.sidebar.header("Connect with me:")
+
+# Menampilkan nama di sidebar
 st.sidebar.markdown("Fahru Rojak")
+
+
+# Menambahkan tautan LinkedIn di sidebar
 col1 = st.sidebar
 with col1:
     st.markdown("[![LinkedIn]](https://id.linkedin.com/in/fahrurojak=public_profile_browsemap)")
+
+# Menambahkan teks penjelasan di sidebar
 st.sidebar.markdown("For inquiries and collaborations, feel free to contact me!")
+
+# Menampilkan teks motivasi di sidebar
 st.sidebar.markdown("Keep riding and stay healthy!")
+
+# Menambahkan pemisah horizontal di sidebar
 st.sidebar.markdown("---")
+
+# Menampilkan tautan dataset
 st.sidebar.markdown("[Dataset](https://drive.google.com/file/d/1RaBmV6Q6FYWU4HWZs80Suqd7KQC34diQ/view)")
 
-# Filter main_df
+# Hubungkan filter dengan main_df
 main_df = day_df[
     (day_df["dateday"] >= str(start_date)) &
     (day_df["dateday"] <= str(end_date))
 ]
 
-# Main Page
+# Menampilkan judul "Bike Sharing Dashboard" di halaman utama
 st.title("Bike Sharing Dashboard")
 st.markdown("##")
+
+# Membagi layar menjadi 3 kolom
 col1, col2, col3 = st.columns(3)
+
+# Menampilkan total rides di kolom pertama
 with col1:
     total_all_rides = main_df['count'].sum()
     st.metric("Total Rides", value=total_all_rides)
+
+# Menampilkan total casual rides di kolom kedua
 with col2:
     total_casual_rides = main_df['casual'].sum()
     st.metric("Total Casual Rides", value=total_casual_rides)
+
+# Menampilkan total registered rides di kolom ketiga
 with col3:
     total_registered_rides = main_df['registered'].sum()
     st.metric("Total Registered Rides", value=total_registered_rides)
+
+# Menampilkan pemisah horizontal
 st.markdown("---")
 
-# Visualizations
+
+#Visualisai
 
 # Grouping data by yearmonth and calculating the total casual, registered, and total rides
 monthly_rent_df['total_rides'] = monthly_rent_df['casual_rides'] + monthly_rent_df['registered_rides']
@@ -159,12 +200,15 @@ fig.update_layout(xaxis_title='', yaxis_title='Total Rentals',
                   plot_bgcolor='rgba(255, 255, 255, 0)',
                   showlegend=True,
                   legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+
+ #Display the plot
 st.plotly_chart(fig, use_container_width=True)
 
-# Weather
+#Weather
 fig = px.box(day_df, x='weathersit', y='count', color='weathersit', 
              title='Bike Users Distribution Based on Weather Condition',
              labels={'weathersit': 'Weather Condition', 'count': 'Total Rentals'})
+
 st.plotly_chart(fig, use_container_width=True)
 
 # Plot for working day
@@ -183,52 +227,78 @@ fig2 = px.box(day_df, x='holiday', y='count', color='holiday',
 fig2.update_xaxes(title_text='Holiday')
 fig2.update_yaxes(title_text='Total Rentals')
 
-# Combining the two plots
-combined_fig = fig1
-combined_fig.add_traces(fig2.data)
-st.plotly_chart(combined_fig, use_container_width=True)
-
 # Plot for weekday
 fig3 = px.box(day_df, x='weekday', y='count', color='weekday',
               title='Bike Rental Clusters by Weekday',
               labels={'weekday': 'Weekday', 'count': 'Total Rentals'},
-              color_discrete_sequence=px.colors.qualitative.Set3)
+              color_discrete_sequence=['#00FFFF', '#FF00FF', '#FFFF00', '#00FF00', '#FF0000'])
 fig3.update_xaxes(title_text='Weekday')
 fig3.update_yaxes(title_text='Total Rentals')
+
+# Displaying the plots
+st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
 st.plotly_chart(fig3, use_container_width=True)
 
-# Time Series Decomposition
-ts_decomposition = seasonal_decompose(day_df.set_index('dateday')['count'], model='multiplicative')
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 8), sharex=True)
-ts_decomposition.observed.plot(ax=ax1, legend=False)
-ax1.set_ylabel('Observed')
-ts_decomposition.trend.plot(ax=ax2, legend=False)
-ax2.set_ylabel('Trend')
-ts_decomposition.seasonal.plot(ax=ax3, legend=False)
-ax3.set_ylabel('Seasonal')
-ts_decomposition.resid.plot(ax=ax4, legend=False)
-ax4.set_ylabel('Residual')
-ax4.set_xlabel('Date')
-fig.suptitle('Time Series Decomposition of Bike Rentals', fontsize=16)
-plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+# Creating a scatter plot
+fig = px.scatter(day_df, x='temp', y='count', color='season',
+                 title='Bike Rental Clusters by Season and Temperature',
+                 labels={'temp': 'Temperature (°C)', 'count': 'Total Rentals'},
+                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+                 hover_name='season')
+
+# Displaying the plot
+st.plotly_chart(fig, use_container_width=True)
+
+
+# Grouping data by season and calculating the total registered and casual usages
+seasonal_usage = day_df.groupby('season')[['registered', 'casual']].sum().reset_index()
+
+# Creating a bar plot
+fig = px.bar(seasonal_usage, x='season', y=['registered', 'casual'],
+             title='Bike Rental Counts by Season',
+             labels={'season': 'Season', 'value': 'Total Rentals', 'variable': 'User Type'},
+             color_discrete_sequence=["#00FF00","#0000FF"], barmode='group')
+
+# Time Series Decomposition for bike rentals
+ts_decomposition = seasonal_decompose(day_df.set_index('dateday')['count'], model='multiplicative', period=365)
+
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(15, 10))
+ax1.plot(ts_decomposition.observed)
+ax1.set_title('Observed')
+ax2.plot(ts_decomposition.trend)
+ax2.set_title('Trend')
+ax3.plot(ts_decomposition.seasonal)
+ax3.set_title('Seasonal')
+ax4.plot(ts_decomposition.resid)
+ax4.set_title('Residual')
 st.pyplot(fig)
 
-# Correlation Heatmap
-corr_matrix = day_df.corr()
-plt.figure(figsize=(12, 8))
-sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
-plt.title('Correlation Heatmap of Bike Rental Dataset', fontsize=16)
-st.pyplot(plt)
+# Feature Importance Analysis
+features = day_df[['temp', 'atemp', 'hum', 'holiday', 'workingday', 'weathersit', 'season']].copy()
+features['season'] = features['season'].map({'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3})
+features['weathersit'] = features['weathersit'].map({'Clear/Partly Cloudy': 1, 'Misty/Cloudy': 2, 'Light Snow/Rain': 3, 'Severe Weather': 4})
 
-# Feature Importance using Random Forest
-X = day_df.drop(columns=['count', 'dateday'])
+X = features
 y = day_df['count']
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-rf_model.fit(X, y)
-feature_importances = pd.Series(rf_model.feature_importances_, index=X.columns).sort_values(ascending=False)
-plt.figure(figsize=(12, 8))
-feature_importances.plot(kind='bar', color='#1B9154')
-plt.title('Feature Importance based on Random Forest', fontsize=16)
-plt.xlabel('Features')
-plt.ylabel('Importance')
-st.pyplot(plt)
+
+model = RandomForestRegressor()
+model.fit(X, y)
+importance = model.feature_importances_
+feature_importance = pd.DataFrame({'Feature': X.columns, 'Importance': importance}).sort_values(by='Importance', ascending=False)
+
+fig = px.bar(feature_importance, x='Importance', y='Feature', orientation='h',
+             title='Feature Importance in Predicting Bike Rentals',
+             labels={'Feature': 'Features', 'Importance': 'Importance'})
+st.plotly_chart(fig, use_container_width=True)
+
+# Correlation Matrix
+corr_matrix = day_df[['temp', 'atemp', 'hum', 'casual', 'registered', 'count']].corr()
+fig, ax = plt.subplots(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, fmt='.2f', cmap='coolwarm', square=True, ax=ax)
+ax.set_title('Correlation Matrix')
+st.pyplot(fig)
+
+# Displaying the plot
+st.plotly_chart(fig, use_container_width=True)
+st.caption('Copyright (c), created by Fahru Rojak')  
