@@ -256,14 +256,13 @@ fig = px.bar(seasonal_usage, x='season', y=['registered', 'casual'],
              title='Bike Rental Counts by Season',
              labels={'season': 'Season', 'value': 'Total Rentals', 'variable': 'User Type'},
              color_discrete_sequence=["#00FF00","#0000FF"], barmode='group')
-
-# Scatter Plot: Rentals vs. Temperature
-fig = px.scatter(day_df, x='temp', y='count', color='season',
-                 title='Bike Rental Clusters by Season and Temperature',
-                 labels={'temp': 'Temperature (°C)', 'count': 'Total Rentals'},
-                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
-                 hover_name='season')
-st.plotly_chart(fig, use_container_width=True)
+             
+# Correlation Heatmap
+corr_matrix = day_df[['temp', 'atemp', 'hum', 'casual', 'registered', 'count']].corr()
+fig = plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', vmin=-1, vmax=1)
+plt.title('Correlation Heatmap')
+st.pyplot(fig)
 
 # Displaying the plot
 st.plotly_chart(fig, use_container_width=True)
