@@ -83,7 +83,7 @@ st.sidebar.markdown("Fahru Rojak")
 
 # LinkedIn
 st.sidebar.markdown(
-    "[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg)](https://id.linkedin.com/in/fahrurojak=public_profile_browsemap)"
+    '[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg)](https://www.linkedin.com/in/fahrurojak)'
 )
 
 # Instagram
