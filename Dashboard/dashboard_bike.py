@@ -209,15 +209,16 @@ fig = px.bar(seasonal_usage, x='season', y=['registered', 'casual'],
              color_discrete_sequence=["#00FF00", "#0000FF"], barmode='group')
 st.plotly_chart(fig, use_container_width=True)
 
-# Correlation Analysis
-correlation_matrix = day_df[['temp', 'atemp', 'hum', 'count']].corr()
-st.write("### Correlation Analysis")
-st.write(correlation_matrix)
 
-# Heatmap for correlation
-fig = plt.figure(figsize=(10, 8))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0, fmt='.2f')
-plt.title('Correlation Heatmap')
+# Compute correlation matrix
+correlation_matrix = day_df[['temp', 'atemp', 'hum', 'count']].corr()
+
+# Create a heatmap
+fig, ax = plt.subplots(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0, fmt='.2f', ax=ax, vmin=-1, vmax=1, linewidths=0.5)
+ax.set_title('Correlation Heatmap', size=16)
+
+# Display the heatmap in Streamlit
 st.pyplot(fig)
 
 # Trend Analysis by Year
