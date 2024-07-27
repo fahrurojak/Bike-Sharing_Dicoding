@@ -140,8 +140,7 @@ st.markdown("""
 
 st.markdown("##")
 
-
-# Apply custom CSS for rounded UI
+# Apply custom CSS for rounded UI and improved font styling
 st.markdown(
     """
     <style>
@@ -151,14 +150,16 @@ st.markdown(
         padding: 20px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
+        text-align: center;
     }
     .metric-value {
         font-size: 24px;
         font-weight: bold;
+        color: #333333; /* Darker color for better readability */
     }
     .metric-label {
         font-size: 14px;
-        color: #888888;
+        color: #555555; /* Darker color for better readability */
     }
     </style>
     """,
