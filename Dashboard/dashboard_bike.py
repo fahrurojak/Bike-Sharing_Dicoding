@@ -83,18 +83,19 @@ st.sidebar.markdown("Fahru Rojak")
 
 # LinkedIn
 st.sidebar.markdown(
-    '[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg)](https://www.linkedin.com/in/fahrurojak)'
+    '<a href="https://www.linkedin.com/in/fahrurojak" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg" width="30" height="30" alt="LinkedIn"/></a>',
+    unsafe_allow_html=True
 )
 
 # Instagram
 st.sidebar.markdown(
-    '<a href="https://www.instagram.com/your_instagram_profile" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="30" height="30" alt="Instagram"/></a>',
+    '<a href="https://www.instagram.com/fahrurojak" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="30" height="30" alt="Instagram"/></a>',
     unsafe_allow_html=True
 )
 
 # GitHub
 st.sidebar.markdown(
-    '<a href="https://github.com/your_github_profile" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" width="30" height="30" alt="GitHub"/></a>',
+    '<a href="https://github.com/fahrurojak" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" width="30" height="30" alt="GitHub"/></a>',
     unsafe_allow_html=True
 )
 
@@ -139,14 +140,42 @@ st.markdown("""
 
 st.markdown("##")
 
-# Metrics
+
+# Apply custom CSS for rounded UI
+st.markdown(
+    """
+    <style>
+    .metric-box {
+        border-radius: 15px;
+        background-color: #f0f0f0; /* Change this color to match your theme */
+        padding: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .metric-value {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .metric-label {
+        font-size: 14px;
+        color: #888888;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Create columns for metrics
 col1, col2, col3 = st.columns(3)
+
 with col1:
-    st.metric("Total Rides", value=main_df['count'].sum())
+    st.markdown('<div class="metric-box"><div class="metric-label">Total Rides</div><div class="metric-value">' + str(main_df['count'].sum()) + '</div></div>', unsafe_allow_html=True)
+
 with col2:
-    st.metric("Total Casual Rides", value=main_df['casual'].sum())
+    st.markdown('<div class="metric-box"><div class="metric-label">Total Casual Rides</div><div class="metric-value">' + str(main_df['casual'].sum()) + '</div></div>', unsafe_allow_html=True)
+
 with col3:
-    st.metric("Total Registered Rides", value=main_df['registered'].sum())
+    st.markdown('<div class="metric-box"><div class="metric-label">Total Registered Rides</div><div class="metric-value">' + str(main_df['registered'].sum()) + '</div></div>', unsafe_allow_html=True)
 
 # Monthly rental trends
 fig = px.bar(monthly_rent_df,
