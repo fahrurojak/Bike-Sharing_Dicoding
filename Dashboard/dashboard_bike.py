@@ -209,16 +209,17 @@ fig = px.bar(seasonal_usage, x='season', y=['registered', 'casual'],
              color_discrete_sequence=["#00FF00", "#0000FF"], barmode='group')
 st.plotly_chart(fig, use_container_width=True)
 
-
-# Compute correlation matrix
+# Calculate the correlation matrix
 correlation_matrix = day_df[['temp', 'atemp', 'hum', 'count']].corr()
 
-# Create a heatmap
-fig, ax = plt.subplots(figsize=(10, 8))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0, fmt='.2f', ax=ax, vmin=-1, vmax=1, linewidths=0.5)
-ax.set_title('Correlation Heatmap', size=16)
+# Display the correlation matrix
+st.write("### Correlation Analysis")
+st.write(correlation_matrix)
 
-# Display the heatmap in Streamlit
+# Plot the heatmap
+fig = plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0, fmt='.2f', linewidths=.5)
+plt.title('Correlation Heatmap')
 st.pyplot(fig)
 
 # Trend Analysis by Year
@@ -268,7 +269,6 @@ fig = px.bar(holiday_comparison, x='holiday', y='sum',
              labels={'holiday': 'Holiday', 'sum': 'Total Rentals'})
 st.plotly_chart(fig, use_container_width=True)
 
-# Hourly Ride Patterns
 # Extract hour from the 'dateday' column
 day_df['hour'] = day_df['dateday'].dt.hour
 
@@ -280,8 +280,9 @@ fig = px.line(hourly_rent_df, x='hour', y='count',
               title='Hourly Bike Rentals',
               labels={'hour': 'Hour of Day', 'count': 'Total Rentals'})
 fig.update_xaxes(tickmode='linear')
-st.plotly_chart(fig, use_container_width=True)
 
+# Display the plot
+st.plotly_chart(fig, use_container_width=True)
 # Weather Impact Analysis
 # Aggregate data by weather condition
 weather_impact_df = day_df.groupby('weathersit').agg({'count': 'mean'}).reset_index()
