@@ -120,9 +120,23 @@ st.sidebar.markdown(
 
 # Filter data based on selected date range
 main_df = day_df[(day_df["dateday"] >= str(start_date)) & (day_df["dateday"] <= str(end_date))]
+st.markdown("""
+    <style>
+    @keyframes titleAnimation {
+        0% { color: #1B9154; }
+        50% { color: #FF6347; }
+        100% { color: #1B9154; }
+    }
+    .animated-title {
+        font-size: 3em;
+        font-weight: bold;
+        animation: titleAnimation 2s infinite;
+        text-align: center;
+    }
+    </style>
+    <div class="animated-title">Bike Sharing Dashboard</div>
+""", unsafe_allow_html=True)
 
-# Main title
-st.title("Bike Sharing Dashboard")
 st.markdown("##")
 
 # Metrics
