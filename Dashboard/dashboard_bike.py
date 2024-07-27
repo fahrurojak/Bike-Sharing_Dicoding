@@ -1,4 +1,3 @@
-# Libraries Used
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -69,6 +68,7 @@ aggregated_stats_by_season = day_df.groupby('season').agg({
     'atemp': ['max', 'min', 'mean'],
     'hum': ['max', 'min', 'mean']
 })
+
 # Streamlit setup
 st.sidebar.image("https://img.fonwall.ru/o/63/velofristayl-trial-velosipedist-zakat.jpg")
 st.sidebar.header("Filter:")
@@ -109,7 +109,8 @@ fig = px.bar(monthly_rent_df,
              barmode='group',
              color_discrete_sequence=["#FF69B4", "#00FF00", "#0000FF"],
              title="Bike Rental Trends by Month",
-             labels={'casual_rides': 'Casual Rentals', 'registered_rides': 'Registered Rentals', 'total_rides': 'Total Rides'})
+             labels={'casual_rides': 'Casual Rentals', 'registered_rides': 'Registered Rentals', 'total_rides': 'Total Rides'},
+             hover_name='yearmonth')
 fig.update_layout(xaxis_title='', yaxis_title='Total Rentals',
                   xaxis=dict(showgrid=False, showline=True, linecolor='rgb(204, 204, 204)', linewidth=2, mirror=True),
                   yaxis=dict(showgrid=False, zeroline=False, showline=True, linecolor='rgb(204, 204, 204)', linewidth=2, mirror=True),
@@ -121,38 +122,48 @@ st.plotly_chart(fig, use_container_width=True)
 # Weather conditions
 fig = px.box(day_df, x='weathersit', y='count', color='weathersit', 
              title='Bike Rentals by Weather Condition',
-             labels={'weathersit': 'Weather Condition', 'count': 'Total Rentals'})
+             labels={'weathersit': 'Weather Condition', 'count': 'Total Rentals'},
+             color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+             hover_name='weathersit')
+fig.update_layout(xaxis_title='', yaxis_title='Total Rentals')
 st.plotly_chart(fig, use_container_width=True)
 
 # Working day
 fig1 = px.box(day_df, x='workingday', y='count', color='workingday',
               title='Bike Rentals by Working Day',
               labels={'workingday': 'Working Day', 'count': 'Total Rentals'},
-              color_discrete_sequence=['#00FFFF', '#FF00FF'])
+              color_discrete_sequence=['#00FFFF', '#FF00FF'],
+              hover_name='workingday')
 fig1.update_xaxes(title_text='Working Day')
 fig1.update_yaxes(title_text='Total Rentals')
+st.plotly_chart(fig1, use_container_width=True)
 
 # Holiday
 fig2 = px.box(day_df, x='holiday', y='count', color='holiday',
               title='Bike Rentals by Holiday',
               labels={'holiday': 'Holiday', 'count': 'Total Rentals'},
-              color_discrete_sequence=['#00FFFF', '#FF00FF'])
+              color_discrete_sequence=['#00FFFF', '#FF00FF'],
+              hover_name='holiday')
 fig2.update_xaxes(title_text='Holiday')
 fig2.update_yaxes(title_text='Total Rentals')
+st.plotly_chart(fig2, use_container_width=True)
 
 # Weekday
 fig3 = px.box(day_df, x='weekday', y='count', color='weekday',
               title='Bike Rentals by Weekday',
               labels={'weekday': 'Weekday', 'count': 'Total Rentals'},
-              color_discrete_sequence=['#00FFFF', '#FF00FF', '#FFFF00', '#00FF00', '#FF0000'])
+              color_discrete_sequence=['#00FFFF', '#FF00FF', '#FFFF00', '#00FF00', '#FF0000'],
+              hover_name='weekday')
 fig3.update_xaxes(title_text='Weekday')
 fig3.update_yaxes(title_text='Total Rentals')
+st.plotly_chart(fig3, use_container_width=True)
 
 # Scatter plot by temperature and season
 fig = px.scatter(day_df, x='temp', y='count', color='season',
                  title='Bike Rentals by Temperature and Season',
                  labels={'temp': 'Temperature (°C)', 'count': 'Total Rentals'},
-                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'])
+                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+                 hover_name='season')
 st.plotly_chart(fig, use_container_width=True)
 
 # Seasonal usage bar plot
@@ -160,7 +171,8 @@ seasonal_usage = day_df.groupby('season')[['registered', 'casual']].sum().reset_
 fig = px.bar(seasonal_usage, x='season', y=['registered', 'casual'],
              title='Bike Rentals by Season',
              labels={'season': 'Season', 'value': 'Total Rentals', 'variable': 'User Type'},
-             color_discrete_sequence=["#00FF00", "#0000FF"], barmode='group')
+             color_discrete_sequence=["#00FF00", "#0000FF"], barmode='group',
+             hover_name='season')
 st.plotly_chart(fig, use_container_width=True)
 
 # Correlation Analysis
@@ -178,47 +190,74 @@ st.pyplot(fig)
 yearly_rent_df = day_df.groupby('year').agg({'count': 'sum'}).reset_index()
 fig = px.line(yearly_rent_df, x='year', y='count',
               title='Total Bike Rentals by Year',
-              labels={'count': 'Total Rentals'})
+              labels={'count': 'Total Rentals'},
+              markers=True)
 st.plotly_chart(fig, use_container_width=True)
 
 # Monthly and Daily Patterns
 monthly_pattern = day_df.groupby('month')['count'].mean().reset_index()
 fig = px.line(monthly_pattern, x='month', y='count',
               title='Average Bike Rentals by Month',
-              labels={'count': 'Average Rentals'})
+              labels={'count': 'Average Rentals'},
+              markers=True)
 st.plotly_chart(fig, use_container_width=True)
 
 daily_pattern = day_df.groupby('weekday')['count'].mean().reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).reset_index()
 fig = px.bar(daily_pattern, x='weekday', y='count',
              title='Average Bike Rentals by Weekday',
-             labels={'count': 'Average Rentals'})
+             labels={'count': 'Average Rentals'},
+             color_discrete_sequence=['#1f77b4'])
 st.plotly_chart(fig, use_container_width=True)
 
 # Impact of Temperature and Humidity
 fig = px.scatter(day_df, x='temp', y='count', color='season',
                  title='Bike Rentals vs Temperature',
                  labels={'temp': 'Temperature (°C)', 'count': 'Total Rentals'},
-                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'])
+                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+                 hover_name='season')
 st.plotly_chart(fig, use_container_width=True)
 
 fig = px.scatter(day_df, x='hum', y='count', color='season',
                  title='Bike Rentals vs Humidity',
                  labels={'hum': 'Humidity (%)', 'count': 'Total Rentals'},
-                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'])
+                 color_discrete_sequence=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+                 hover_name='season')
 st.plotly_chart(fig, use_container_width=True)
 
 # Top 10 Days for Bike Rentals
 top_10_days = day_df[['dateday', 'count']].sort_values(by='count', ascending=False).head(10)
 fig = px.bar(top_10_days, x='dateday', y='count',
              title='Top 10 Days for Bike Rentals',
-             labels={'dateday': 'Date', 'count': 'Total Rentals'})
+             labels={'dateday': 'Date', 'count': 'Total Rentals'},
+             color_discrete_sequence=['#FF6347'],
+             hover_name='dateday')
 st.plotly_chart(fig, use_container_width=True)
 
 # Holiday vs Non-Holiday Analysis
 holiday_comparison = day_df.groupby('holiday')['count'].agg(['mean', 'sum']).reset_index()
 fig = px.bar(holiday_comparison, x='holiday', y='sum',
              title='Bike Rentals: Holiday vs Non-Holiday',
-             labels={'holiday': 'Holiday', 'sum': 'Total Rentals'})
+             labels={'holiday': 'Holiday', 'sum': 'Total Rentals'},
+             color_discrete_sequence=['#FF6347'],
+             hover_name='holiday')
+st.plotly_chart(fig, use_container_width=True)
+
+# Additional Analysis
+# Rental patterns by hour of the day
+day_df['hour'] = day_df['hr'].apply(lambda x: x // 1)  # Assuming 'hr' is the hour column
+hourly_rent_df = day_df.groupby('hour')['count'].mean().reset_index()
+fig = px.line(hourly_rent_df, x='hour', y='count',
+              title='Average Bike Rentals by Hour of the Day',
+              labels={'hour': 'Hour of the Day', 'count': 'Average Rentals'},
+              markers=True)
+st.plotly_chart(fig, use_container_width=True)
+
+# Heatmap for daily patterns
+daily_rent_df = day_df.groupby(['weekday', 'hour'])['count'].mean().reset_index()
+fig = px.density_heatmap(daily_rent_df, x='hour', y='weekday', z='count',
+                        title='Heatmap of Bike Rentals by Hour and Weekday',
+                        labels={'hour': 'Hour of the Day', 'weekday': 'Weekday', 'count': 'Average Rentals'},
+                        color_continuous_scale='Viridis')
 st.plotly_chart(fig, use_container_width=True)
 
 st.write("### Detailed Analysis")
@@ -228,6 +267,8 @@ st.write("**3. Monthly and Daily Patterns**: Explored average bike rentals on a 
 st.write("**4. Impact of Temperature and Humidity**: Investigated how temperature and humidity affect bike rentals.")
 st.write("**5. Top 10 Days for Bike Rentals**: Identified the top 10 days with the highest number of rentals.")
 st.write("**6. Holiday vs Non-Holiday Analysis**: Compared bike rentals on holidays and non-holidays.")
+st.write("**7. Rental Patterns by Hour of the Day**: Explored how bike rentals vary by hour of the day.")
+st.write("**8. Heatmap of Daily Patterns**: Visualized the density of bike rentals by hour and weekday.")
 
 # Footer
 st.caption('Copyright (c), created by Fahru Rojak')
