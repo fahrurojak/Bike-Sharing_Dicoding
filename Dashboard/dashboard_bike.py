@@ -80,11 +80,41 @@ start_date, end_date = st.sidebar.date_input(
 )
 st.sidebar.header("Connect with me:")
 st.sidebar.markdown("Fahru Rojak")
-st.sidebar.markdown("[![LinkedIn]](https://id.linkedin.com/in/fahrurojak=public_profile_browsemap)")
+
+# LinkedIn
+st.sidebar.markdown(
+    "[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg)](https://id.linkedin.com/in/fahrurojak=public_profile_browsemap)"
+)
+
+# Instagram
+st.sidebar.markdown(
+    "[![Instagram](https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png)](https://www.instagram.com/fahruphoto)"
+)
+
+# GitHub
+st.sidebar.markdown(
+    "[![GitHub](https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg)](https://github.com/fahrurojak)"
+)
+
 st.sidebar.markdown("For inquiries and collaborations, feel free to contact me!")
 st.sidebar.markdown("Keep riding and stay healthy!")
 st.sidebar.markdown("---")
 st.sidebar.markdown("[Dataset](https://drive.google.com/file/d/1RaBmV6Q6FYWU4HWZs80Suqd7KQC34diQ/view)")
+
+# Adding some custom CSS for animation
+st.sidebar.markdown(
+    """
+    <style>
+    .sidebar .sidebar-content a img {
+        transition: transform 0.3s;
+    }
+    .sidebar .sidebar-content a img:hover {
+        transform: scale(1.1);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Filter data based on selected date range
 main_df = day_df[(day_df["dateday"] >= str(start_date)) & (day_df["dateday"] <= str(end_date))]
