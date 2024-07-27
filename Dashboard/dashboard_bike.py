@@ -269,20 +269,6 @@ fig = px.bar(holiday_comparison, x='holiday', y='sum',
              labels={'holiday': 'Holiday', 'sum': 'Total Rentals'})
 st.plotly_chart(fig, use_container_width=True)
 
-# Extract hour from the 'dateday' column
-day_df['hour'] = day_df['dateday'].dt.hour
-
-# Aggregate data by hour
-hourly_rent_df = day_df.groupby('hour').agg({'count': 'sum'}).reset_index()
-
-# Hourly ride patterns
-fig = px.line(hourly_rent_df, x='hour', y='count',
-              title='Hourly Bike Rentals',
-              labels={'hour': 'Hour of Day', 'count': 'Total Rentals'})
-fig.update_xaxes(tickmode='linear')
-
-# Display the plot
-st.plotly_chart(fig, use_container_width=True)
 # Weather Impact Analysis
 # Aggregate data by weather condition
 weather_impact_df = day_df.groupby('weathersit').agg({'count': 'mean'}).reset_index()
