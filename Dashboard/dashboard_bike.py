@@ -88,16 +88,18 @@ st.sidebar.markdown(
 
 # Instagram
 st.sidebar.markdown(
-    "[![Instagram](https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png)](https://www.instagram.com/fahruphoto)"
+    '<a href="https://www.instagram.com/your_instagram_profile" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="30" height="30" alt="Instagram"/></a>',
+    unsafe_allow_html=True
 )
 
 # GitHub
 st.sidebar.markdown(
-    "[![GitHub](https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg)](https://github.com/fahrurojak)"
+    '<a href="https://github.com/your_github_profile" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" width="30" height="30" alt="GitHub"/></a>',
+    unsafe_allow_html=True
 )
 
-st.sidebar.markdown("For inquiries and collaborations, feel free to contact me!")
-st.sidebar.markdown("Keep riding and stay healthy!")
+st.sidebar.markdown("Jika Anda memiliki pertanyaan atau tertarik untuk berkolaborasi, jangan ragu untuk menghubungi saya melalui media sosial.")
+st.sidebar.markdown("Semoga Anda terus bersemangat dalam beraktivitas dan selalu menjaga kesehatan dengan baik!")
 st.sidebar.markdown("---")
 st.sidebar.markdown("[Dataset](https://drive.google.com/file/d/1RaBmV6Q6FYWU4HWZs80Suqd7KQC34diQ/view)")
 
@@ -251,13 +253,65 @@ fig = px.bar(holiday_comparison, x='holiday', y='sum',
              labels={'holiday': 'Holiday', 'sum': 'Total Rentals'})
 st.plotly_chart(fig, use_container_width=True)
 
-st.write("### Detailed Analysis")
-st.write("**1. Correlation Analysis**: Analyzed how features like temperature, perceived temperature, and humidity correlate with the total bike rentals.")
-st.write("**2. Trend Analysis by Year**: Examined the trend of total bike rentals over different years.")
-st.write("**3. Monthly and Daily Patterns**: Explored average bike rentals on a monthly and daily basis.")
-st.write("**4. Impact of Temperature and Humidity**: Investigated how temperature and humidity affect bike rentals.")
-st.write("**5. Top 10 Days for Bike Rentals**: Identified the top 10 days with the highest number of rentals.")
-st.write("**6. Holiday vs Non-Holiday Analysis**: Compared bike rentals on holidays and non-holidays.")
+# Hourly Ride Patterns
+# Extract hour from the 'dateday' column
+day_df['hour'] = day_df['dateday'].dt.hour
+
+# Aggregate data by hour
+hourly_rent_df = day_df.groupby('hour').agg({'count': 'sum'}).reset_index()
+
+# Hourly ride patterns
+fig = px.line(hourly_rent_df, x='hour', y='count',
+              title='Hourly Bike Rentals',
+              labels={'hour': 'Hour of Day', 'count': 'Total Rentals'})
+fig.update_xaxes(tickmode='linear')
+st.plotly_chart(fig, use_container_width=True)
+
+# Weather Impact Analysis
+# Aggregate data by weather condition
+weather_impact_df = day_df.groupby('weathersit').agg({'count': 'mean'}).reset_index()
+
+# Weather impact
+fig = px.bar(weather_impact_df, x='weathersit', y='count',
+             title='Average Bike Rentals by Weather Condition',
+             labels={'weathersit': 'Weather Condition', 'count': 'Average Rentals'},
+             color='count', color_continuous_scale='Viridis')
+st.plotly_chart(fig, use_container_width=True)
+
+# Correlation with Weather Conditions
+# Add weather conditions to correlation matrix
+correlation_matrix_extended = day_df[['temp', 'atemp', 'hum', 'count', 'weathersit']].copy()
+correlation_matrix_extended = pd.get_dummies(correlation_matrix_extended, columns=['weathersit'])
+correlation_matrix_extended = correlation_matrix_extended.corr()
+
+# Extended Correlation Heatmap
+fig = plt.figure(figsize=(12, 10))
+sns.heatmap(correlation_matrix_extended, annot=True, cmap='coolwarm', center=0, fmt='.2f')
+plt.title('Extended Correlation Heatmap')
+st.pyplot(fig)
+
+# Monthly and Seasonal Trends with Interactive Visualizations
+# Monthly trends
+fig = px.line(monthly_rent_df, x='yearmonth', y='total_rides',
+              title='Monthly Bike Rental Trends',
+              labels={'total_rides': 'Total Rentals'})
+st.plotly_chart(fig, use_container_width=True)
+
+# Seasonal comparison
+seasonal_comparison = day_df.groupby('season').agg({'count': 'mean'}).reset_index()
+fig = px.pie(seasonal_comparison, names='season', values='count',
+             title='Bike Rentals by Season',
+             labels={'count': 'Average Rentals'})
+st.plotly_chart(fig, use_container_width=True)
+
+# Ride Trends by Working Day and Holiday
+# Working Day vs Holiday Analysis
+working_vs_holiday = day_df.groupby(['workingday', 'holiday']).agg({'count': 'mean'}).reset_index()
+fig = px.bar(working_vs_holiday, x='workingday', y='count', color='holiday',
+             title='Bike Rentals by Working Day and Holiday',
+             labels={'workingday': 'Working Day', 'count': 'Average Rentals'})
+st.plotly_chart(fig, use_container_width=True)
+
 
 # Footer
 st.caption('Copyright (c), created by Fahru Rojak')
